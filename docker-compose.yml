@@ -1,0 +1,120 @@
+version: "3.4"
+
+services:
+  php:
+    build:
+      context: .
+      target: app_php
+      args:
+        SYMFONY_VERSION: ${SYMFONY_VERSION:-}
+        STABILITY: ${STABILITY:-stable}
+    restart: unless-stopped
+    volumes:
+      - php_socket:/var/run/php
+      - ./public:/srv/app/public
+    healthcheck:
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    environment:
+      # Run "composer require symfony/orm-pack" to install and configure Doctrine ORM
+      DATABASE_URL: mysql://${MARIADB_USER:-app}:${MARIADB_PASSWORD:-!ChangeMe!}@database:3306/${MARIADB_DATABASE:-app}?serverVersion=mariadb-${MARIADB_VERSION:-10.6}
+      # Aplicación
+      APP_DOMAIN: ${APP_DOMAIN:-localhost}
+      APP_URL: ${APP_URL:-localhost}
+      # Otras variables de entorno
+      MYSQL_DATABASE: ${MARIADB_DATABASE:-app}
+      # You should definitely change the password in production
+      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-!ChangeMe!}
+      MYSQL_USER: ${MARIADB_USER:-app}
+      MYSQL_PASSWORD: ${MARIADB_PASSWORD:-!ChangeMe!}
+      CORS_ALLOW_ORIGIN: ${CORS_ALLOW_ORIGIN:-^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$$}
+      MAILER_DSN: ${MAILER_DSN:-null://null}
+      MESSENGER_TRANSPORT_DSN: ${MESSENGER_TRANSPORT_DSN:-doctrine://default}
+      LOCK_DSN: ${LOCK_DSN:-flock}
+      ALLOW_DOMAINS: ${ALLOW_DOMAINS:-null}
+      ROLE_ADMIN: ${ROLE_ADMIN:-[]}
+
+  caddy:
+    build:
+      context: .
+      target: app_caddy
+    depends_on:
+      - php
+    environment:
+      SERVER_NAME: ${SERVER_NAME:-localhost, caddy:80}
+    restart: unless-stopped
+    volumes:
+      - php_socket:/var/run/php
+      - caddy_data:/data
+      - caddy_config:/config
+    ports:
+      # HTTP
+      - target: 80
+        published: ${HTTP_PORT:-80}
+        protocol: tcp
+      # HTTPS
+      - target: 443
+        published: ${HTTPS_PORT:-443}
+        protocol: tcp
+      # HTTP/3
+      - target: 443
+        published: ${HTTP3_PORT:-443}
+        protocol: udp
+
+# Mercure is installed as a Caddy module, prevent the Flex recipe from installing another service
+
+###> doctrine/doctrine-bundle ###
+  database:
+    image: mariadb:${MARIADB_VERSION:-10.6}
+    restart: unless-stopped
+    environment:
+      TZ: ${MARIADB_TZ:-UTC}
+      MYSQL_DATABASE: ${MARIADB_DATABASE:-app}
+      # You should definitely change the password in production
+      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-!ChangeMe!}
+      MYSQL_USER: ${MARIADB_USER:-app}
+      MYSQL_PASSWORD: ${MARIADB_PASSWORD:-!ChangeMe!}
+    ports:
+      - "${MARIADB_PORT:-3306}:3306"
+    volumes:
+      - database_data:/var/lib/mysql:rw
+      - backup:/backup
+      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
+      # - ./docker/db/data:/var/lib/mysql:rw
+###< doctrine/doctrine-bundle ###
+
+  # consumer:
+  #   build:
+  #     context: .
+  #     target: app_php
+  #   entrypoint: docker-php-entrypoint
+  #   command: bin/console messenger:consume
+  #   depends_on:
+  #     - database
+  #   restart: unless-stopped
+  #   healthcheck:
+  #     test: [ 'CMD', 'ps', 'aux', '|', 'egrep', '"\d+:\d+ php bin/console messenger:consume async failed"' ]
+  #     interval: 10s
+  #     timeout: 3s
+  #     retries: 3
+  #     start_period: 30s
+  #   environment:
+  #     DATABASE_URL: mysql://${MARIADB_USER:-app}:${MARIADB_PASSWORD:-!ChangeMe!}@database:3306/${MARIADB_DATABASE:-app}?serverVersion=mariadb-${MARIADB_VERSION:-10.6}
+  #     MERCURE_URL: ${CADDY_MERCURE_URL:-http://caddy/.well-known/mercure}
+  #     MERCURE_PUBLIC_URL: ${APP_URL:-https://localhost}/.well-known/mercure
+  #     MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
+  #     APP_URL: ${APP_URL:-localhost}
+  #     MAILER_DSN: ${MAILER_DSN:-null://null}
+  #     MESSENGER_TRANSPORT_DSN: ${MESSENGER_TRANSPORT_DSN:-doctrine://default}
+
+volumes:
+  php_socket:
+  caddy_data:
+  caddy_config:
+
+###> doctrine/doctrine-bundle ###
+  database_data:
+  backup:
+###< doctrine/doctrine-bundle ###
