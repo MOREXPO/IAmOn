@@ -1,0 +1,42 @@
+{# templates/login/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/login.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/particles.css') }}">
+{% endblock %}
+
+{% block title %}Login
+{% endblock %}
+
+{% block body %}
+
+	<div id="particles-js">
+		<div class="w-25 position-absolute" style="top:25%;left:40%;">
+			<form action="{{ path('app_login') }}" method="post">
+
+				<h1 class="h3 mb-3 fw-normal text-white">Entrar</h1>
+				{% if error %}
+					<div class="alert alert-danger" role="alert">
+						{{ error }}
+					</div>
+				{% endif %}
+				<div class="form-floating my-2">
+					<input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}" placeholder="username">
+					<label for="floatingInput">Usuario</label>
+				</div>
+				<div class="form-floating my-2">
+					<input type="password" class="form-control" id="password" name="_password" placeholder="Password">
+					<label for="floatingPassword">Contraseña</label>
+				</div>
+				<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+				<button class="btn btn-primary w-100 py-2" type="submit">Entrar</button>
+				<div class="mt-3">
+					<a href="{{ path('app_registration') }}" class="link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Registrarse</a>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<script src="{{ asset('assets/js/particles.js') }}"></script>
+	<script src="{{ asset('assets/js/particulas.js') }}"></script>
+{% endblock %}

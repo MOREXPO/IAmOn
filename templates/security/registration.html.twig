@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/registration.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/particles.css') }}">
+{% endblock %}
+
+{% block title %}Registro de usuarios
+{% endblock %}
+
+{% block body %}
+
+	<div id="particles-js">
+		<div class="w-25 position-absolute" style="top:25%;left:40%;">
+			<form action="{{ path('app_registration') }}" method="post">
+
+				<h1 class="h3 mb-3 fw-normal text-white">Registro</h1>
+				{% if error %}
+					<div class="alert alert-danger" role="alert">
+						{{ error }}
+					</div>
+				{% endif %}
+				<div class="form-floating my-2">
+					<input type="text" class="form-control" id="username" name="username" placeholder="name@example.com">
+					<label for="floatingInput">Usuario</label>
+				</div>
+				<div class="form-floating my-2">
+					<input type="email" class="form-control" id="email" name="email" placeholder="name@example.com">
+					<label for="floatingInput">Email</label>
+				</div>
+				<div class="form-floating my-2">
+					<input type="password" class="form-control" id="password" name="password" placeholder="Password">
+					<label for="floatingPassword">Contraseña</label>
+				</div>
+				<div class="form-floating my-2">
+					<input type="password" class="form-control" id="passwordRepeat" name="passwordRepeat" placeholder="Password Repeat">
+					<label for="floatingPassword">Repetir contraseña</label>
+				</div>
+				<button class="btn btn-primary w-100 py-2" type="submit">Registrarse</button>
+				<div class="mt-3">
+					<a href="{{ path('app_login') }}" class="link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Entrar</a>
+				</div>
+			</form>
+		</div>
+	</div>
+	<script src="{{ asset('assets/js/particles.js') }}"></script>
+	<script src="{{ asset('assets/js/particulas.js') }}"></script>
+</div>{% endblock %}

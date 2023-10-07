@@ -15,7 +15,16 @@ class IndexController extends AbstractController
     {
         return $this->render(
             'index/index.html.twig',
-            ['year' => '2023']
+            []
+        );
+    }
+
+    #[Route('/switches', name: 'app_switches')]
+    public function switch(): Response
+    {
+        return $this->render(
+            'index/switches.html.twig',
+            []
         );
     }
 }
