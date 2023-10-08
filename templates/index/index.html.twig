@@ -3,7 +3,7 @@
 
 	<div class="container my-5">
 		<div class="row">
-			<div class="col-4">
+			<div class="col-12 col-md-4">
 				<form class="mb-4">
 					<div class="input-group">
 						<input type="text" class="form-control" placeholder="Buscar..." aria-label="Buscar">
@@ -64,12 +64,24 @@
 						</div>
 						<div class="modal-body">
 							<div class="form-floating mb-3">
-								<input type="text" class="form-control rounded-3" id="floatingInput" value="978-0-451-52493-5" readonly>
-								<label for="floatingInput">URI publico</label>
+								<div class="input-group">
+									<span class="input-group-text" id="inputGroup-sizing-sm">URI publico</span>
+									<input type="text" class="form-control" id="floatingInput" value="978-0-451-52493-5" readonly>
+									<button id="copyButton" class="btn btn-outline-secondary">
+										<i class="bi bi-clipboard"></i>
+										Copiar
+									</button>
+								</div>
 							</div>
 							<div class="form-floating mb-3">
-								<input type="text" class="form-control rounded-3" id="floatingInput" value="0-476-35557-4" readonly>
-								<label for="floatingInput">URI privado</label>
+								<div class="input-group">
+									<span class="input-group-text" id="inputGroup-sizing-sm">URI privado</span>
+									<input type="text" class="form-control" id="floatingInput" value="0-476-35557-4" readonly>
+									<button id="copyButton" class="btn btn-outline-secondary">
+										<i class="bi bi-clipboard"></i>
+										Copiar
+									</button>
+								</div>
 							</div>
 						</div>
 					</div>

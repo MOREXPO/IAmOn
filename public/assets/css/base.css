@@ -23,15 +23,15 @@ body {
   }
 
   25% {
-    transform: translateX(350px) rotate(90deg);
+    transform: translateX(400px) rotate(90deg);
   }
 
   50% {
-    transform: translateX(700px) rotate(180deg);
+    transform: translateX(800px) rotate(180deg);
   }
 
   75% {
-    transform: translateX(350px) rotate(90deg);
+    transform: translateX(400px) rotate(90deg);
   }
 
   100% {

@@ -18,10 +18,10 @@
 	<body>
 		<header class="p-3 text-bg-dark">
 			<div class="container">
-				<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+				<div class="d-flex flex-wrap align-items-center justify-content-end justify-content-lg-start">
 
 					<ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-						<div class="animation-container">
+						<div class="animation-container d-none d-lg-inline">
 							<a class="btn p-3 border border-5 rounded-0 square" id="square" role="button" href="{{ path('app_index') }}"></a>
 						</div>
 					</ul>
@@ -34,6 +34,9 @@
 							<ul class="dropdown-menu text-small" style="">
 								<li>
 									<a class="dropdown-item" href="#">perfil</a>
+								</li>
+								<li>
+									<a class="dropdown-item" href="{{ path('app_index') }}">mis switches</a>
 								</li>
 								<li><hr class="dropdown-divider"></li>
 								<li>

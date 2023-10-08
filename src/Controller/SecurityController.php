@@ -41,13 +41,22 @@ class SecurityController extends AbstractController
     #[Route('/registration', name: 'app_registration', methods: ['POST', 'GET'])]
     public function register(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
     {
+
+        if ($this->getUser()) {
+            return $this->redirectToRoute("app_index");
+        }
         // Crear una nueva instancia de la entidad User
         $user = new User();
 
         if ($request->getMethod() == 'POST') {
 
             if ($request->request->get('password') !== $request->request->get('passwordRepeat'))
-                return $this->render('security/registration.html.twig', ['error' => 'Las contraseñas tienen que coincider']);
+                return $this->render(
+                    'security/registration.html.twig',
+                    [
+                        'error' => 'Las contraseñas tienen que coincider',
+                    ]
+                );
             // hash the password (based on the security.yaml config for the $user class)
             $hashedPassword = $passwordHasher->hashPassword(
                 $user,
@@ -65,6 +74,11 @@ class SecurityController extends AbstractController
         }
 
 
-        return $this->render('security/registration.html.twig', ['error' => null]);
+        return $this->render(
+            'security/registration.html.twig',
+            [
+                'error' => null,
+            ]
+        );
     }
 }
