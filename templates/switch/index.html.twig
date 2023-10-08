@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Detalle del Switch
+{% endblock %}
+
+{% block body %}
+	<div class="hero">
+		<div class="hero__base mt-5">
+			<div class="container my-5">
+				<div class="row">
+					<div class="col-12">
+						<h2 class="pb-4 border-bottom text-white">Detalle del Switch</h2>
+					</div>
+				</div>
+
+				<div class="row my-5">
+					<div class="col-md-12">
+						<div class="card h-100">
+							<div class="card-header bg-primary text-white">
+								<h5 class="card-title">Nombre del Switch</h5>
+							</div>
+							<div class="card-body">
+								<p class="card-text">Descripción ficticia del switch. Este es un ejemplo de cómo se vería la descripción del switch en la plantilla.</p>
+								<div class="form-check form-switch mb-3">
+									<input class="form-check-input" type="checkbox" id="estadoSwitch">
+									<label class="form-check-label" for="estadoSwitch">
+										<span class="badge bg-danger rounded-pill">Apagado</span>
+									</label>
+								</div>
+								<div class="mb-3">
+									<strong>Tiempo Encendido:</strong>
+									2 horas 30 minutos
+								</div>
+								<div class="mb-3">
+									<strong>Propietario:</strong>
+									Nombre del Propietario
+								</div>
+							</div>
+							<div class="card-footer">
+								<button class="btn btn-primary">Seguir</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="cube"></div>
+		<div class="cube"></div>
+		<div class="cube"></div>
+		<div class="cube"></div>
+		<div class="cube"></div>
+		<div class="cube"></div>
+	</div>
+{% endblock %}

@@ -2,20 +2,17 @@
 
 namespace App\Controller;
 
-use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class IndexController extends AbstractController
+class SwitchController extends AbstractController
 {
-    #[Route('/', name: 'app_index')]
+    #[Route('/switch', name: 'app_switch')]
     public function index(): Response
     {
-        return $this->render(
-            'index/index.html.twig',
-            []
-        );
+        return $this->render('switch/index.html.twig', [
+            'controller_name' => 'SwitchController',
+        ]);
     }
 }
