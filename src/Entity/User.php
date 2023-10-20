@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -25,6 +27,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private array $roles = [];
+
+    #[ORM\OneToMany(mappedBy: "user", targetEntity: UserSwitch::class)]
+    private $suscriptions;
+
+    public function __construct()
+    {
+        $this->suscriptions = new ArrayCollection();
+    }
+
+
 
     /**
      * @var string The hashed password
@@ -102,6 +114,49 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->password = $password;
 
+        return $this;
+    }
+
+    public function toJson(): string
+    {
+        // Crear un arreglo asociativo con las propiedades que deseas incluir en el JSON
+        $data = [
+            'id' => $this->id,
+            'username' => $this->username,
+            'email' => $this->email,
+            'roles' => $this->roles,
+            // Agrega otras propiedades según tus necesidades
+        ];
+
+        // Accedes a la relación 'followers' si es necesario
+        $suscriptionsData = [];
+        foreach ($this->getSuscriptions() as $suscription) {
+            $suscriptionsData[] = $suscription->toJson();
+        }
+        $data['suscriptions'] = $suscriptionsData;
+
+        return json_encode($data);
+    }
+
+    /**
+     * @return Collection|UserSwitch[]
+     */
+    public function getSuscriptions(): Collection
+    {
+        return $this->suscriptions;
+    }
+
+    public function addSuscription(UserSwitch $switch): self
+    {
+        if (!$this->suscriptions->contains($switch)) {
+            $this->suscriptions[] = $switch;
+        }
+        return $this;
+    }
+
+    public function removeSuscription(UserSwitch $switch): self
+    {
+        $this->suscriptions->removeElement($switch);
         return $this;
     }
 

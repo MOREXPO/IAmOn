@@ -22,134 +22,144 @@
 				</h2>
 			</div>
 		</div>
-		<div class="row row-cols-1 row-cols-md-3 g-4">
-			<!-- Aquí puedes iterar sobre los switches creados por el usuario -->
-			{# for switch in user_switches #}
-				<div class="col"> <div class="card h-100 bg-light">
-					<div class="card-body bg-success-subtle">
-						<h5 class="card-title">
-							Minecraft
-						</h5>
-						<p class="card-text">
-							<div class="form-check form-switch fs-5">
-								<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+		<div
+			class="row row-cols-1 row-cols-md-3 g-4">
+			{# Itera sobre los switches creados por el usuario #}
+			{% for switch in mis_switches %}
+				<div class="col my-4">
+					<div class="card h-100 bg-light">
+						<div class="card-body {% if switch.state %} bg-success-subtle {% else %} bg-danger-subtle {% endif %}">
+							<h5 class="card-title">
+								{{switch.name}}
+							</h5>
+							<p class="card-text">
+								<div class="form-check form-switch fs-5">
+									{% if not switch.state %}
+										<a href="#" data-bs-toggle="modal" data-bs-target="#switchModal{{ switch.id }}">
+										{% endif %}
+										<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheck{{ switch.id }}" {% if switch.state %} checked {% endif %}>
+										{% if not switch.state %}
+										</a>
+									{% endif %}
+								</div>
+							</p>
+							<!-- Agrega otros detalles de tu switch según tus datos -->
+							<script>
+								$(document).ready(function () { // Escucha el evento change de los checkboxes por su ID
+$('#flexSwitchCheck  {{ switch.id }}').on('change', function () {
+
+$.ajax({
+url: '/check-switch/' + {{ switch.id }}, // Reemplaza con la URL de tu controlador
+type: 'POST', // Puedes cambiar a GET si es necesario
+data: {
+isChecked: false // Envía el estado del checkbox al controlador
+},
+success: function (response) { // Maneja la respuesta del controlador si es necesario
+console.log(response);
+},
+error: function (error) { // Maneja errores si es necesario
+console.error(error);
+}
+});
+});
+});
+							</script>
+
+						</div>
+						<div class="modal fade" id="switchModal{{ switch.id }}" tabindex="-1" aria-labelledby="switchModalLabel{{ switch.id }}" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="switchModalLabel{{ switch.id }}">Configurar Switch</h5>
+										<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="modal-body">
+										<form id="switchForm{{ switch.id }}">
+											<div class="form-group">
+												<label for="onTime">Tiempo de Encendido (minutos):</label>
+												<input type="number" class="form-control" id="onTime{{ switch.id }}" name="onTime" min="1" max="120" value="60">
+											</div>
+										</form>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+										<button type="button" class="btn btn-primary" onclick="encenderSwitch({{ switch.id }})">Encender</button>
+									</div>
+								</div>
 							</div>
-						</p>
-						<!-- Agrega otros detalles de tu switch según tus datos -->
-					</div>
-					<div class="card-footer">
-						<div class="d-flex justify-content-between">
-							<a href="#" class="fs-4" data-bs-toggle="modal" data-bs-target="#modalUri">
-								<i class="bi bi-share-fill"></i>
-							</a>
-							<div class="fs-4">5&nbsp<i class="bi bi-person"></i>
-							</div>
-							<div>
-								<!-- Agrega enlaces o botones según tus necesidades -->
-								<a href="#" class="btn btn-danger">
-									<i class="bi bi-x-lg"></i>
+						</div>
+						<div class="card-footer">
+							<div class="d-flex justify-content-between">
+								<a href="#" class="fs-4" data-bs-toggle="modal" data-bs-target="#modalUri{{ switch.id }}">
+									<i class="bi bi-share-fill"></i>
 								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- Modal -->
-			<div class="modal fade" id="modalUri" tabindex="-1" aria-labelledby="modalUriLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h1 class="modal-title fs-5" id="modalUriLabel">URIs</h1>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<div class="form-floating mb-3">
-								<div class="input-group">
-									<span class="input-group-text" id="inputGroup-sizing-sm">URI publico</span>
-									<input type="text" class="form-control" id="floatingInput" value="978-0-451-52493-5" readonly>
-									<button id="copyButton" class="btn btn-outline-secondary">
-										<i class="bi bi-clipboard"></i>
-										Copiar
-									</button>
+								<div class="fs-4">{{switch.followers|length}}&nbsp<i class="bi bi-person"></i>
 								</div>
-							</div>
-							<div class="form-floating mb-3">
-								<div class="input-group">
-									<span class="input-group-text" id="inputGroup-sizing-sm">URI privado</span>
-									<input type="text" class="form-control" id="floatingInput" value="0-476-35557-4" readonly>
-									<button id="copyButton" class="btn btn-outline-secondary">
-										<i class="bi bi-clipboard"></i>
-										Copiar
-									</button>
+								<div>
+									<!-- Agrega enlaces o botones según tus necesidades -->
+									<a href="{{ path('switches_delete', {'id': switch.id}) }}" onclick="return confirm('¿Estás seguro de que deseas eliminar este Switch?')" class="btn btn-danger">
+										<i class="bi bi-x-lg"></i>
+									</a>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
+				<!-- Modal -->
+				<div class="modal fade" id="modalUri{{ switch.id }}" tabindex="-1" aria-labelledby="modalUriLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h1 class="modal-title fs-5" id="modalUriLabel">URIs</h1>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<div class="form-floating mb-3">
+									<div class="input-group">
+										<span class="input-group-text" id="inputGroup-sizing-sm">URI publico</span>
+										<input type="text" class="form-control" id="floatingInputPublic{{ switch.id }}" value="{{ switch.publicUri }}" readonly>
+										<button id="copyButtonPublic{{ switch.id }}" class="btn btn-outline-secondary">
+											<i class="bi bi-clipboard"></i>
+											Copiar
+										</button>
+									</div>
+								</div>
+								<div class="form-floating mb-3">
+									<div class="input-group">
+										<span class="input-group-text" id="inputGroup-sizing-sm">URI privado</span>
+										<input type="text" class="form-control" id="floatingInputPrivate{{ switch.id }}" value="{{ switch.privateUri }}" readonly>
+										<button id="copyButtonPrivate{{ switch.id }}" class="btn btn-outline-secondary">
+											<i class="bi bi-clipboard"></i>
+											Copiar
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<script>
+					// Agrega un evento de clic para copiar el valor cuando se haga clic en el botón
+document.getElementById("copyButtonPublic             {{ switch.id }}").addEventListener("click", function () { // Selecciona el input correspondiente y copia su valor
+var input = document.getElementById("floatingInputPublic             {{ switch.id }}");
+input.select();
+document.execCommand("copy");
+});
+
+document.getElementById("copyButtonPrivate             {{ switch.id }}").addEventListener("click", function () { // Selecciona el input correspondiente y copia su valor
+var input = document.getElementById("floatingInputPrivate             {{ switch.id }}");
+input.select();
+document.execCommand("copy");
+});
+				</script>
+				{% if loop.index % 3 == 0 or loop.last %}
+				</div>
+				<div class="row row-cols-1 row-cols-md-3 g-4">
+				{% endif %}
+			{% endfor %}
 			{# endfor #}
-			<div class="col">
-				<div class="card h-100 bg-light">
-					<div class="card-body bg-danger-subtle">
-						<h5 class="card-title">
-							Minecraft
-						</h5>
-						<p class="card-text">
-							<div class="form-check form-switch fs-5">
-								<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-							</div>
-						</p>
-						<!-- Agrega otros detalles de tu switch según tus datos -->
-					</div>
-					<div class="card-footer">
-						<div class="d-flex justify-content-between">
-							<a href="#" class="fs-4" data-bs-toggle="modal" data-bs-target="#modalUri">
-								<i class="bi bi-share-fill"></i>
-							</a>
-
-							<div class="fs-4">8&nbsp<i class="bi bi-person"></i>
-							</div>
-							<div>
-								<!-- Agrega enlaces o botones según tus necesidades -->
-								<a href="#" class="btn btn-danger">
-									<i class="bi bi-x-lg"></i>
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col">
-				<div class="card h-100 bg-light">
-					<div class="card-body bg-success-subtle">
-						<h5 class="card-title">
-							Minecraft
-						</h5>
-						<p class="card-text">
-							<div class="form-check form-switch fs-5">
-								<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-							</div>
-						</p>
-						<!-- Agrega otros detalles de tu switch según tus datos -->
-					</div>
-					<div class="card-footer">
-						<div class="d-flex justify-content-between">
-							<a href="#" class="fs-4" data-bs-toggle="modal" data-bs-target="#modalUri">
-								<i class="bi bi-share-fill"></i>
-							</a>
-
-							<div class="fs-4">12&nbsp<i class="bi bi-person"></i>
-							</div>
-							<div>
-								<!-- Agrega enlaces o botones según tus necesidades -->
-								<a href="#" class="btn btn-danger">
-									<i class="bi bi-x-lg"></i>
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
 		</div>
 
 		<div class="row mt-4">
@@ -158,84 +168,44 @@
 				</h2>
 			</div>
 		</div>
-		<div class="row row-cols-1 row-cols-md-3 g-4">
-			<!-- Aquí puedes iterar sobre los switches a los que está suscrito el usuario -->
-			{# for subscribed_switch in subscribed_switches #}
-				<div class="col"> <div class="card h-100 bg-light">
-					<div class="card-body bg-success-subtle">
-						<h5 class="card-title">
-							Fortnite
-						</h5>
-						<p class="card-text">Usuario propietario:  Mario
-						</p>
-						<p class="card-text">Minutos encendido: 12:06</p>
-						<!-- Agrega otros detalles de tus switches suscritos según tus datos -->
-					</div>
-					<div
-						class="card-footer">
-						<!-- Agrega enlaces o botones según tus necesidades -->
-						<div class="d-flex justify-content-between">
-							<div>
-								<!-- Agrega detalles del estado o la fecha de encendido según tus datos -->
-							</div>
-							<div>
-								<a href="#" class="btn btn-danger">Dejar de seguir</a>
+		<div
+			class="row row-cols-1 row-cols-md-3 g-4">
+			{# Itera sobre los switches a los que está suscrito el usuario #}
+			{% for subscribed_switch in subscribed_switches %}
+				<div class="col my-4">
+					<div class="card h-100 bg-light">
+						<div class="card-body bg-success-subtle">
+							<h5 class="card-title">
+								{{subscribed_switch.name}}
+							</h5>
+							<p class="card-text">Usuario propietario:
+								{{subscribed_switch.owner.username}}
+							</p>
+							<p class="card-text">Minutos encendido: 12:06</p>
+							<!-- Agrega otros detalles de tus switches suscritos según tus datos -->
+						</div>
+						<div
+							class="card-footer">
+							<!-- Agrega enlaces o botones según tus necesidades -->
+							<div class="d-flex justify-content-between">
+								<div>
+									<!-- Agrega detalles del estado o la fecha de encendido según tus datos -->
+								</div>
+								<div>
+									<form action="{{ path('app_change_follower_switch',{'id':subscribed_switch.id}) }}" method="post" class="">
+										<button type="submit" class="btn btn-danger">Dejar de seguir</button>
+									</form>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
+				{% if loop.index % 3 == 0 or loop.last %}
+				</div>
+				<div class="row row-cols-1 row-cols-md-3 g-4">
+				{% endif %}
+			{% endfor %}
 			{# endfor #}
-			<div class="col">
-				<div class="card h-100 bg-light">
-					<div class="card-body bg-success-subtle">
-						<h5 class="card-title">
-							Fortnite
-						</h5>
-						<p class="card-text">Usuario propietario:  Mario
-						</p>
-						<p class="card-text">Minutos encendido: 12:06</p>
-						<!-- Agrega otros detalles de tus switches suscritos según tus datos -->
-					</div>
-					<div
-						class="card-footer">
-						<!-- Agrega enlaces o botones según tus necesidades -->
-						<div class="d-flex justify-content-between">
-							<div>
-								<!-- Agrega detalles del estado o la fecha de encendido según tus datos -->
-							</div>
-							<div>
-								<a href="#" class="btn btn-danger">Dejar de seguir</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col">
-				<div class="card h-100 bg-light">
-					<div class="card-body bg-danger-subtle">
-						<h5 class="card-title">
-							Fortnite
-						</h5>
-						<p class="card-text">Usuario propietario:  Mario
-						</p>
-						<p class="card-text">Último encendido: 10/10/2024 12:06</p>
-						<!-- Agrega otros detalles de tus switches suscritos según tus datos -->
-					</div>
-					<div
-						class="card-footer">
-						<!-- Agrega enlaces o botones según tus necesidades -->
-						<div class="d-flex justify-content-between">
-							<div>
-								<!-- Agrega detalles del estado o la fecha de encendido según tus datos -->
-							</div>
-							<div>
-								<a href="#" class="btn btn-danger">Dejar de seguir</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
 		</div>
 	</div>
 	<!-- Modal -->
@@ -248,7 +218,7 @@
 				</div>
 
 				<div class="modal-body p-5 pt-0">
-					<form class="">
+					<form action="{{ path('app_create_switch') }}" method="post" class="">
 						<div class="form-floating mb-3">
 							<input type="text" id="nombre" name="nombre" class="form-control rounded-3" maxlength="100" required>
 							<label for="floatingInput">Nombre</label>
@@ -262,6 +232,31 @@
 				</div>
 			</div>
 		</div>
+		<script>
+			function encenderSwitch(switchId) {
+var onTime = parseInt($('#onTime' + switchId).val());
+
+// Realiza una solicitud AJAX al controlador para encender el switch con el tiempo especificado
+$.ajax({
+url: '/check-switch/' + switchId,
+type: 'POST',
+data: {
+isChecked: true,
+onTime: onTime
+},
+success: function (response) { // Maneja la respuesta del controlador si es necesario
+console.log(response);
+},
+error: function (error) { // Maneja errores si es necesario
+console.error(error);
+}
+});
+
+
+// Cierra el modal
+$('#switchModal' + switchId).modal('hide');
+}
+		</script>
 	</div>
 
 {% endblock %}

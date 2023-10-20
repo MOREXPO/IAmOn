@@ -17,28 +17,58 @@
 					<div class="col-md-12">
 						<div class="card h-100">
 							<div class="card-header bg-primary text-white">
-								<h5 class="card-title">Nombre del Switch</h5>
+								<h5 class="card-title">{{switch.name}}</h5>
 							</div>
 							<div class="card-body">
-								<p class="card-text">Descripción ficticia del switch. Este es un ejemplo de cómo se vería la descripción del switch en la plantilla.</p>
-								<div class="form-check form-switch mb-3">
-									<input class="form-check-input" type="checkbox" id="estadoSwitch">
-									<label class="form-check-label" for="estadoSwitch">
-										<span class="badge bg-danger rounded-pill">Apagado</span>
+								<p class="card-text">{{switch.description}}</p>
+								<div class="{% if not isPublic or switch.owner == app.user %}form-check form-switch{% endif %} mb-3">
+									{% if not isPublic or switch.owner == app.user %}
+										{% if not switch.state %}
+											<a href="#" data-bs-toggle="modal" data-bs-target="#switchModal">
+											{% endif %}
+											<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheck" {% if switch.state %} checked {% endif %}>
+											{% if not switch.state %}
+											</a>
+										{% endif %}
+									{% endif %}
+									<label class="{% if not isPublic or switch.owner == app.user %}form-check-label{% endif %}" for="estadoSwitch">
+										{% if switch.state %}
+											<span class="badge bg-success rounded-pill">Encendido</span>
+										{% else %}
+											<span class="badge bg-danger rounded-pill">Apagado</span>
+										{% endif %}
 									</label>
 								</div>
 								<div class="mb-3">
-									<strong>Tiempo Encendido:</strong>
-									2 horas 30 minutos
+									{% if switch.state %}
+										<strong>Tiempo Encendido:</strong>
+										{{switch.clickDate|date('Y-m-d H:i:s')}}
+									{% else %}
+										<strong>Fecha Ultimo Encendido:</strong>
+										{{switch.clickDate|date('Y-m-d H:i:s')}}
+									{% endif %}
 								</div>
 								<div class="mb-3">
 									<strong>Propietario:</strong>
-									Nombre del Propietario
+									{{switch.owner.username}}
 								</div>
 							</div>
-							<div class="card-footer">
-								<button class="btn btn-primary">Seguir</button>
-							</div>
+							{% if switch.owner != app.user %}
+								<div class="card-footer">
+									{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+										<form action="{{ path('app_change_follower_switch',{'id':switch.id}) }}" method="post" class="">
+
+											<input type="hidden" name="switch_uuid" value="{{ app.request.attributes.get('uuid') }}">
+											{% if is_suscrito %}
+												<button type="submit" class="btn btn-danger">Dejar de seguir</button>
+											{% else %}
+												<button type="submit" class="btn btn-primary">Seguir</button>
+											{% endif %}
+
+										</form>
+									{% endif %}
+								</div>
+							{% endif %}
 						</div>
 					</div>
 				</div>
@@ -50,5 +80,74 @@
 		<div class="cube"></div>
 		<div class="cube"></div>
 		<div class="cube"></div>
+		<div class="modal fade" id="switchModal" tabindex="-1" aria-labelledby="switchModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="switchModalLabel">Configurar Switch</h5>
+						<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form id="switchForm{{ switch.id }}">
+							<div class="form-group">
+								<label for="onTime">Tiempo de Encendido (minutos):</label>
+								<input type="number" class="form-control" id="onTime{{ switch.id }}" name="onTime" min="1" max="120" value="60">
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+						<button type="button" class="btn btn-primary" onclick="encenderSwitch({{ switch.id }})">Encender</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
+			function encenderSwitch(switchId) {
+var onTime = parseInt($('#onTime' + switchId).val());
+
+// Realiza una solicitud AJAX al controlador para encender el switch con el tiempo especificado
+$.ajax({
+url: '/check-switch/' + switchId,
+type: 'POST',
+data: {
+isChecked: true,
+onTime: onTime
+},
+success: function (response) { // Maneja la respuesta del controlador si es necesario
+console.log(response);
+},
+error: function (error) { // Maneja errores si es necesario
+console.error(error);
+}
+});
+
+
+// Cierra el modal
+$('#switchModal').modal('hide');
+}
+		</script>
+		<script>
+			$(document).ready(function () { // Escucha el evento change de los checkboxes por su ID
+$('#flexSwitchCheck').on('change', function () {
+
+$.ajax({
+url: '/check-switch/' + {{ switch.id }}, // Reemplaza con la URL de tu controlador
+type: 'POST', // Puedes cambiar a GET si es necesario
+data: {
+isChecked: false // Envía el estado del checkbox al controlador
+},
+success: function (response) { // Maneja la respuesta del controlador si es necesario
+console.log(response);
+},
+error: function (error) { // Maneja errores si es necesario
+console.error(error);
+}
+});
+});
+});
+		</script>
 	</div>
 {% endblock %}
