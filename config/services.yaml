@@ -6,6 +6,8 @@
 parameters:
 
 services:
+
+    Symfony\Component\Messenger\Transport\TransportInterface: '@messenger.transport.async'
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.

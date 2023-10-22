@@ -43,7 +43,11 @@ RUN apk add --no-cache \
 		file \
 		gettext \
 		git \
+		tzdata \
 	;
+
+RUN cp /usr/share/zoneinfo/Europe/Madrid  /etc/localtime
+RUN echo "Europe/Madrid" >  /etc/timezone
 
 RUN set -eux; \
     install-php-extensions \
@@ -157,3 +161,9 @@ WORKDIR /srv/app
 COPY --from=app_caddy_builder --link /usr/bin/caddy /usr/bin/caddy
 #COPY --from=app_php --link /srv/app/public public/
 COPY --link docker/caddy/Caddyfile /etc/caddy/Caddyfile
+
+RUN apk add --no-cache \
+		tzdata \
+	;
+RUN cp /usr/share/zoneinfo/Europe/Madrid  /etc/localtime
+RUN echo "Europe/Madrid" >  /etc/timezone

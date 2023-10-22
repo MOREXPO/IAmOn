@@ -41,11 +41,44 @@
 								</div>
 								<div class="mb-3">
 									{% if switch.state %}
-										<strong>Tiempo Encendido:</strong>
-										{{switch.clickDate|date('Y-m-d H:i:s')}}
+										<strong>
+											<p id="minutosEncendido" class="card-text"></p>
+										</strong>
+										<script>
+											// Obtiene la fecha y hora almacenada en PHP y conviértela en un objeto DateTime de JavaScript
+var clickDate = luxon.DateTime.fromISO("{{ switch.clickDate|date('c') }}"); // Asegúrate de obtener la fecha correcta de tu contexto de Twig
+
+function updateMinutesCounter() {
+var currentTime = luxon.DateTime.local();
+var elapsedTime = Math.floor(currentTime.diff(clickDate, 'seconds').seconds);
+var minutes = Math.floor(elapsedTime / 60);
+var seconds = elapsedTime % 60;
+
+var minutesText = String(minutes).padStart(2, '0');
+var secondsText = String(seconds).padStart(2, '0');
+
+var minutosEncendido = document.getElementById("minutosEncendido");
+minutosEncendido.textContent = "Tiempo encendido: " + minutesText + ":" + secondsText;
+}
+
+// Llama a la función inicialmente para mostrar el tiempo actual
+updateMinutesCounter();
+
+// Actualiza el contador cada segundo
+setInterval(updateMinutesCounter, 1000);
+										</script>
 									{% else %}
-										<strong>Fecha Ultimo Encendido:</strong>
-										{{switch.clickDate|date('Y-m-d H:i:s')}}
+										<strong>
+											<p id="fechaUltimoEncendido" class="card-text"></p>
+										</strong>
+										<script>
+											// Obtiene la fecha y hora almacenada en PHP y conviértela en un objeto DateTime de JavaScript
+var clickDate = luxon.DateTime.fromISO("{{ switch.clickDate|date('c') }}"); // Asegúrate de obtener la fecha correcta de tu contexto de Twig
+
+var fechaUltimoEncendido = document.getElementById("fechaUltimoEncendido");
+var formattedDate = clickDate.toLocaleString(luxon.DateTime.DATETIME_FULL);
+fechaUltimoEncendido.textContent = "Fecha Último Encendido: " + formattedDate;
+										</script>
 									{% endif %}
 								</div>
 								<div class="mb-3">
@@ -118,6 +151,7 @@ onTime: onTime
 },
 success: function (response) { // Maneja la respuesta del controlador si es necesario
 console.log(response);
+location.reload();
 },
 error: function (error) { // Maneja errores si es necesario
 console.error(error);
@@ -141,6 +175,7 @@ isChecked: false // Envía el estado del checkbox al controlador
 },
 success: function (response) { // Maneja la respuesta del controlador si es necesario
 console.log(response);
+location.reload();
 },
 error: function (error) { // Maneja errores si es necesario
 console.error(error);

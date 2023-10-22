@@ -44,6 +44,7 @@ services:
       - php
     environment:
       SERVER_NAME: ${SERVER_NAME:-localhost, caddy:80}
+      TZ: Europe/Madrid
     restart: unless-stopped
     volumes:
       - php_socket:/var/run/php

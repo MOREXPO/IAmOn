@@ -4,10 +4,10 @@
 	<div class="container my-5">
 		<div class="row">
 			<div class="col-12 col-md-4">
-				<form class="mb-4">
+				<form action="{{ path('app_index') }}" method="get" class="mb-4">
 					<div class="input-group">
-						<input type="text" class="form-control" placeholder="Buscar..." aria-label="Buscar">
-						<button class="btn btn-primary" type="button">Buscar</button>
+						<input type="text" name="filter" class="form-control" placeholder="Buscar..." aria-label="Buscar" {% if filter %} value="{{filter}}" {% endif %}>
+						<button class="btn btn-primary" type="submit">Buscar</button>
 					</div>
 				</form>
 			</div>
@@ -46,7 +46,7 @@
 							<!-- Agrega otros detalles de tu switch según tus datos -->
 							<script>
 								$(document).ready(function () { // Escucha el evento change de los checkboxes por su ID
-$('#flexSwitchCheck  {{ switch.id }}').on('change', function () {
+$('#flexSwitchCheck{{ switch.id }}').on('change', function () {
 
 $.ajax({
 url: '/check-switch/' + {{ switch.id }}, // Reemplaza con la URL de tu controlador
@@ -56,6 +56,7 @@ isChecked: false // Envía el estado del checkbox al controlador
 },
 success: function (response) { // Maneja la respuesta del controlador si es necesario
 console.log(response);
+location.reload();
 },
 error: function (error) { // Maneja errores si es necesario
 console.error(error);
@@ -142,14 +143,14 @@ console.error(error);
 				</div>
 				<script>
 					// Agrega un evento de clic para copiar el valor cuando se haga clic en el botón
-document.getElementById("copyButtonPublic             {{ switch.id }}").addEventListener("click", function () { // Selecciona el input correspondiente y copia su valor
-var input = document.getElementById("floatingInputPublic             {{ switch.id }}");
+document.getElementById("copyButtonPublic{{ switch.id }}").addEventListener("click", function () { // Selecciona el input correspondiente y copia su valor
+var input = document.getElementById("floatingInputPublic{{ switch.id }}");
 input.select();
 document.execCommand("copy");
 });
 
-document.getElementById("copyButtonPrivate             {{ switch.id }}").addEventListener("click", function () { // Selecciona el input correspondiente y copia su valor
-var input = document.getElementById("floatingInputPrivate             {{ switch.id }}");
+document.getElementById("copyButtonPrivate{{ switch.id }}").addEventListener("click", function () { // Selecciona el input correspondiente y copia su valor
+var input = document.getElementById("floatingInputPrivate{{ switch.id }}");
 input.select();
 document.execCommand("copy");
 });
@@ -181,7 +182,42 @@ document.execCommand("copy");
 							<p class="card-text">Usuario propietario:
 								{{subscribed_switch.owner.username}}
 							</p>
-							<p class="card-text">Minutos encendido: 12:06</p>
+							{% if subscribed_switch.state %}
+								<p id="minutosEncendido" class="card-text"></p>
+								<script>
+									// Obtiene la fecha y hora almacenada en PHP y conviértela en un objeto DateTime de JavaScript
+var clickDate = luxon.DateTime.fromISO("{{ subscribed_switch.clickDate|date('c') }}"); // Asegúrate de obtener la fecha correcta de tu contexto de Twig
+
+function updateMinutesCounter() {
+var currentTime = luxon.DateTime.local();
+var elapsedTime = Math.floor(currentTime.diff(clickDate, 'seconds').seconds);
+var minutes = Math.floor(elapsedTime / 60);
+var seconds = elapsedTime % 60;
+
+var minutesText = String(minutes).padStart(2, '0');
+var secondsText = String(seconds).padStart(2, '0');
+
+var minutosEncendido = document.getElementById("minutosEncendido");
+minutosEncendido.textContent = "Tiempo encendido: " + minutesText + ":" + secondsText;
+}
+
+// Llama a la función inicialmente para mostrar el tiempo actual
+updateMinutesCounter();
+
+// Actualiza el contador cada segundo
+setInterval(updateMinutesCounter, 1000);
+								</script>
+							{% else %}
+								<p id="fechaUltimoEncendido" class="card-text"></p>
+								<script>
+									// Obtiene la fecha y hora almacenada en PHP y conviértela en un objeto DateTime de JavaScript
+var clickDate = luxon.DateTime.fromISO("{{ subscribed_switch.clickDate|date('c') }}"); // Asegúrate de obtener la fecha correcta de tu contexto de Twig
+
+var fechaUltimoEncendido = document.getElementById("fechaUltimoEncendido");
+var formattedDate = clickDate.toLocaleString(luxon.DateTime.DATETIME_FULL);
+fechaUltimoEncendido.textContent = "Fecha Último Encendido: " + formattedDate;
+								</script>
+							{% endif %}
 							<!-- Agrega otros detalles de tus switches suscritos según tus datos -->
 						</div>
 						<div
@@ -246,6 +282,7 @@ onTime: onTime
 },
 success: function (response) { // Maneja la respuesta del controlador si es necesario
 console.log(response);
+location.reload();
 },
 error: function (error) { // Maneja errores si es necesario
 console.error(error);
