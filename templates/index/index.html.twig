@@ -175,7 +175,7 @@ document.execCommand("copy");
 			{% for subscribed_switch in subscribed_switches %}
 				<div class="col my-4">
 					<div class="card h-100 bg-light">
-						<div class="card-body bg-success-subtle">
+						<div class="card-body {% if subscribed_switch.state %}bg-success-subtle{% else %}bg-danger-subtle{% endif %}">
 							<h5 class="card-title">
 								{{subscribed_switch.name}}
 							</h5>
