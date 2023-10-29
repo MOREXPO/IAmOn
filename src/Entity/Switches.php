@@ -29,7 +29,10 @@ class Switches
     private ?bool $state = false;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $clickDate = null;
+    private ?\DateTimeInterface $clickDateStart = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $clickDateEnd = null;
 
     #[ORM\ManyToOne(inversedBy: 'switches')]
     private ?User $owner = null;
@@ -92,14 +95,26 @@ class Switches
         return $this;
     }
 
-    public function getClickDate(): ?\DateTimeInterface
+    public function getClickDateStart(): ?\DateTimeInterface
     {
-        return $this->clickDate;
+        return $this->clickDateStart;
     }
 
-    public function setClickDate(?\DateTimeInterface $clickDate): static
+    public function setClickDateStart(?\DateTimeInterface $clickDateStart): static
     {
-        $this->clickDate = $clickDate;
+        $this->clickDateStart = $clickDateStart;
+
+        return $this;
+    }
+
+    public function getClickDateEnd(): ?\DateTimeInterface
+    {
+        return $this->clickDateEnd;
+    }
+
+    public function setClickDateEnd(?\DateTimeInterface $clickDateEnd): static
+    {
+        $this->clickDateEnd = $clickDateEnd;
 
         return $this;
     }
@@ -170,7 +185,8 @@ class Switches
             'name' => $this->getName(),
             'description' => $this->getDescription(),
             'state' => $this->isState(),
-            'clickDate' => $this->getClickDate(),
+            'clickDateStart' => $this->getClickDateStart(),
+            'clickDateEnd' => $this->getClickDateEnd(),
             'publicUri' => $this->getPublicUri(),
             'privateUri' => $this->getPrivateUri(),
             // ... Puedes agregar más propiedades según sea necesario

@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Uid\Uuid;
@@ -83,7 +85,7 @@ class SwitchController extends AbstractController
     }
 
     #[Route('/check-switch/{id}', name: 'app_check_switch', methods: ['POST'])]
-    public function checkSwitch(int $id, Request $request, SwitchesRepository $switchesRepository, EntityManagerInterface $entityManager, MessageBusInterface $messageBus, TransportInterface $transport): JsonResponse
+    public function checkSwitch(int $id, MailerInterface $mailer, Request $request, SwitchesRepository $switchesRepository, EntityManagerInterface $entityManager, MessageBusInterface $messageBus, TransportInterface $transport): JsonResponse
     {
         $switch = $switchesRepository->find($id);
         $state =  filter_var($request->request->get("isChecked"), FILTER_VALIDATE_BOOLEAN);
@@ -93,10 +95,32 @@ class SwitchController extends AbstractController
             $message = new StartCountdown($countdownId, $onTime * 60000);
             $delayStamp = new DelayStamp($onTime * 60000);
             $messageBus->dispatch($message, [$delayStamp]);
+            $switch->setClickDateStart(new DateTime());
             $switch->setState(true);
+
+            /*foreach ($switch->getFollowers() as $follower) {
+                $user = $follower->getUser();
+                if (!empty($user->getEmail())) {
+                    $email = (new Email())
+                        ->from('prueba@gmail.com')
+                        ->to($user->getEmail())
+                        //->cc('cc@example.com')
+                        //->bcc('bcc@example.com')
+                        //->replyTo('fabien@example.com')
+                        //->priority(Email::PRIORITY_HIGH)
+                        ->subject('AVISO SWITCH SUSCRITO ENCENDIDO (' . $switch->getName() . ')')
+                        ->text('Tienes el switch ' . $switch->getName() . ' encendido')
+                        ->html('<p>Se encendio a las ' . $switch->getClickDateStart()->format('Y-m-d H:i:s') . '</p>');
+
+                    $mailer->send($email);
+                }
+            }*/
+        } else {
+            $switch->setClickDateEnd(new DateTime());
+            $switch->setState(false);
         }
-        $switch->setState($state);
-        $switch->setClickDate(new DateTime());
+
+
 
         $entityManager->persist($switch);
 

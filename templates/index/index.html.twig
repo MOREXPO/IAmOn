@@ -6,8 +6,8 @@
 			<div class="col-12 col-md-4">
 				<form action="{{ path('app_index') }}" method="get" class="mb-4">
 					<div class="input-group">
-						<input type="text" name="filter" class="form-control" placeholder="Buscar..." aria-label="Buscar" {% if filter %} value="{{filter}}" {% endif %}>
-						<button class="btn btn-primary" type="submit">Buscar</button>
+						<input type="text" name="filter" class="form-control" placeholder="{{'Buscar'| trans }}..." aria-label="Buscar" {% if filter %} value="{{filter}}" {% endif %}>
+						<button class="btn btn-primary" type="submit">{{'Buscar'| trans }}</button>
 					</div>
 				</form>
 			</div>
@@ -15,7 +15,7 @@
 
 		<div class="row">
 			<div class="col-12">
-				<h2 class="pb-2 border-bottom text-white d-flex justify-content-between">Mis switches
+				<h2 class="pb-2 border-bottom text-white d-flex justify-content-between">{{'Mis interruptores'| trans}}
 					<a class="link-light" href="#" data-bs-toggle="modal" data-bs-target="#addModal">
 						<i class="bi bi-plus-square"></i>
 					</a>
@@ -46,7 +46,7 @@
 							<!-- Agrega otros detalles de tu switch según tus datos -->
 							<script>
 								$(document).ready(function () { // Escucha el evento change de los checkboxes por su ID
-$('#flexSwitchCheck{{ switch.id }}').on('change', function () {
+$('#flexSwitchCheck {{ switch.id }}').on('change', function () {
 
 $.ajax({
 url: '/check-switch/' + {{ switch.id }}, // Reemplaza con la URL de tu controlador
@@ -71,7 +71,7 @@ console.error(error);
 							<div class="modal-dialog">
 								<div class="modal-content">
 									<div class="modal-header">
-										<h5 class="modal-title" id="switchModalLabel{{ switch.id }}">Configurar Switch</h5>
+										<h5 class="modal-title" id="switchModalLabel{{ switch.id }}">{{'Configurar interruptor'| trans }}</h5>
 										<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
 											<span aria-hidden="true">&times;</span>
 										</button>
@@ -79,14 +79,14 @@ console.error(error);
 									<div class="modal-body">
 										<form id="switchForm{{ switch.id }}">
 											<div class="form-group">
-												<label for="onTime">Tiempo de Encendido (minutos):</label>
+												<label for="onTime">{{'Tiempo de Encendido (minutos)'| trans }}:</label>
 												<input type="number" class="form-control" id="onTime{{ switch.id }}" name="onTime" min="1" max="120" value="60">
 											</div>
 										</form>
 									</div>
 									<div class="modal-footer">
-										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-										<button type="button" class="btn btn-primary" onclick="encenderSwitch({{ switch.id }})">Encender</button>
+										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{'Cerrar'| trans }}</button>
+										<button type="button" class="btn btn-primary" onclick="encenderSwitch({{ switch.id }})">{{'Encender'| trans }}</button>
 									</div>
 								</div>
 							</div>
@@ -100,7 +100,7 @@ console.error(error);
 								</div>
 								<div>
 									<!-- Agrega enlaces o botones según tus necesidades -->
-									<a href="{{ path('switches_delete', {'id': switch.id}) }}" onclick="return confirm('¿Estás seguro de que deseas eliminar este Switch?')" class="btn btn-danger">
+									<a href="{{ path('switches_delete', {'id': switch.id}) }}" onclick="return confirm('{{'¿Estás seguro de que deseas eliminar este Switch?'| trans }}')" class="btn btn-danger">
 										<i class="bi bi-x-lg"></i>
 									</a>
 								</div>
@@ -119,21 +119,21 @@ console.error(error);
 							<div class="modal-body">
 								<div class="form-floating mb-3">
 									<div class="input-group">
-										<span class="input-group-text" id="inputGroup-sizing-sm">URI publico</span>
+										<span class="input-group-text" id="inputGroup-sizing-sm">{{'URI publico'| trans}}</span>
 										<input type="text" class="form-control" id="floatingInputPublic{{ switch.id }}" value="{{ switch.publicUri }}" readonly>
 										<button id="copyButtonPublic{{ switch.id }}" class="btn btn-outline-secondary">
 											<i class="bi bi-clipboard"></i>
-											Copiar
+											{{'Copiar'| trans}}
 										</button>
 									</div>
 								</div>
 								<div class="form-floating mb-3">
 									<div class="input-group">
-										<span class="input-group-text" id="inputGroup-sizing-sm">URI privado</span>
+										<span class="input-group-text" id="inputGroup-sizing-sm">{{'URI privado'| trans}}</span>
 										<input type="text" class="form-control" id="floatingInputPrivate{{ switch.id }}" value="{{ switch.privateUri }}" readonly>
 										<button id="copyButtonPrivate{{ switch.id }}" class="btn btn-outline-secondary">
 											<i class="bi bi-clipboard"></i>
-											Copiar
+											{{'Copiar'| trans}}
 										</button>
 									</div>
 								</div>
@@ -143,14 +143,14 @@ console.error(error);
 				</div>
 				<script>
 					// Agrega un evento de clic para copiar el valor cuando se haga clic en el botón
-document.getElementById("copyButtonPublic{{ switch.id }}").addEventListener("click", function () { // Selecciona el input correspondiente y copia su valor
-var input = document.getElementById("floatingInputPublic{{ switch.id }}");
+document.getElementById("copyButtonPublic {{ switch.id }}").addEventListener("click", function () { // Selecciona el input correspondiente y copia su valor
+var input = document.getElementById("floatingInputPublic {{ switch.id }}");
 input.select();
 document.execCommand("copy");
 });
 
-document.getElementById("copyButtonPrivate{{ switch.id }}").addEventListener("click", function () { // Selecciona el input correspondiente y copia su valor
-var input = document.getElementById("floatingInputPrivate{{ switch.id }}");
+document.getElementById("copyButtonPrivate {{ switch.id }}").addEventListener("click", function () { // Selecciona el input correspondiente y copia su valor
+var input = document.getElementById("floatingInputPrivate {{ switch.id }}");
 input.select();
 document.execCommand("copy");
 });
@@ -165,7 +165,7 @@ document.execCommand("copy");
 
 		<div class="row mt-4">
 			<div class="col-12">
-				<h2 class="pb-2 border-bottom text-white">Switches suscritos
+				<h2 class="pb-2 border-bottom text-white">{{'Interruptores suscritos'| trans}}
 				</h2>
 			</div>
 		</div>
@@ -179,18 +179,18 @@ document.execCommand("copy");
 							<h5 class="card-title">
 								{{subscribed_switch.name}}
 							</h5>
-							<p class="card-text">Usuario propietario:
+							<p class="card-text">{{'Usuario propietario'| trans}}:
 								{{subscribed_switch.owner.username}}
 							</p>
 							{% if subscribed_switch.state %}
 								<p id="minutosEncendido" class="card-text"></p>
 								<script>
 									// Obtiene la fecha y hora almacenada en PHP y conviértela en un objeto DateTime de JavaScript
-var clickDate = luxon.DateTime.fromISO("{{ subscribed_switch.clickDate|date('c') }}"); // Asegúrate de obtener la fecha correcta de tu contexto de Twig
+var clickDateStart = luxon.DateTime.fromISO("{{ subscribed_switch.clickDateStart|date('c') }}"); // Asegúrate de obtener la fecha correcta de tu contexto de Twig
 
 function updateMinutesCounter() {
 var currentTime = luxon.DateTime.local();
-var elapsedTime = Math.floor(currentTime.diff(clickDate, 'seconds').seconds);
+var elapsedTime = Math.floor(currentTime.diff(clickDateStart, 'seconds').seconds);
 var minutes = Math.floor(elapsedTime / 60);
 var seconds = elapsedTime % 60;
 
@@ -198,7 +198,7 @@ var minutesText = String(minutes).padStart(2, '0');
 var secondsText = String(seconds).padStart(2, '0');
 
 var minutosEncendido = document.getElementById("minutosEncendido");
-minutosEncendido.textContent = "Tiempo encendido: " + minutesText + ":" + secondsText;
+minutosEncendido.textContent = "{{'Tiempo encendido'| trans}}: " + minutesText + ":" + secondsText;
 }
 
 // Llama a la función inicialmente para mostrar el tiempo actual
@@ -211,11 +211,11 @@ setInterval(updateMinutesCounter, 1000);
 								<p id="fechaUltimoEncendido" class="card-text"></p>
 								<script>
 									// Obtiene la fecha y hora almacenada en PHP y conviértela en un objeto DateTime de JavaScript
-var clickDate = luxon.DateTime.fromISO("{{ subscribed_switch.clickDate|date('c') }}"); // Asegúrate de obtener la fecha correcta de tu contexto de Twig
+var clickDateEnd = luxon.DateTime.fromISO("{{ subscribed_switch.clickDateEnd|date('c') }}"); // Asegúrate de obtener la fecha correcta de tu contexto de Twig
 
 var fechaUltimoEncendido = document.getElementById("fechaUltimoEncendido");
-var formattedDate = clickDate.toLocaleString(luxon.DateTime.DATETIME_FULL);
-fechaUltimoEncendido.textContent = "Fecha Último Encendido: " + formattedDate;
+var formattedDate = clickDateEnd.toLocaleString(luxon.DateTime.DATETIME_FULL);
+fechaUltimoEncendido.textContent = "{{'Fecha Último Encendido'| trans}}: " + formattedDate;
 								</script>
 							{% endif %}
 							<!-- Agrega otros detalles de tus switches suscritos según tus datos -->
@@ -229,7 +229,7 @@ fechaUltimoEncendido.textContent = "Fecha Último Encendido: " + formattedDate;
 								</div>
 								<div>
 									<form action="{{ path('app_change_follower_switch',{'id':subscribed_switch.id}) }}" method="post" class="">
-										<button type="submit" class="btn btn-danger">Dejar de seguir</button>
+										<button type="submit" class="btn btn-danger">{{'Dejar de seguir'| trans}}</button>
 									</form>
 								</div>
 							</div>
@@ -249,7 +249,7 @@ fechaUltimoEncendido.textContent = "Fecha Último Encendido: " + formattedDate;
 		<div class="modal-dialog">
 			<div class="modal-content rounded-4 shadow">
 				<div class="modal-header p-5 pb-4 border-bottom-0">
-					<h1 class="fw-bold mb-0 fs-2">Crear Nuevo Switch</h1>
+					<h1 class="fw-bold mb-0 fs-2">{{'Crear Nuevo Switch'| trans}}</h1>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 
@@ -257,13 +257,13 @@ fechaUltimoEncendido.textContent = "Fecha Último Encendido: " + formattedDate;
 					<form action="{{ path('app_create_switch') }}" method="post" class="">
 						<div class="form-floating mb-3">
 							<input type="text" id="nombre" name="nombre" class="form-control rounded-3" maxlength="100" required>
-							<label for="floatingInput">Nombre</label>
+							<label for="floatingInput">{{'Nombre'| trans}}</label>
 						</div>
 						<div class="form-floating mb-3">
 							<textarea id="descripcion" name="descripcion" class="form-control rounded-3" maxlength="400" rows="4"></textarea>
-							<label for="floatingPassword">Descripción (Opcional)</label>
+							<label for="floatingPassword">{{'Descripción (Opcional)'| trans}}</label>
 						</div>
-						<button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Crear</button>
+						<button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">{{'Crear'| trans}}</button>
 					</form>
 				</div>
 			</div>

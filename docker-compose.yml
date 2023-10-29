@@ -86,29 +86,29 @@ services:
       # - ./docker/db/data:/var/lib/mysql:rw
 ###< doctrine/doctrine-bundle ###
 
-  # consumer:
-  #   build:
-  #     context: .
-  #     target: app_php
-  #   entrypoint: docker-php-entrypoint
-  #   command: bin/console messenger:consume
-  #   depends_on:
-  #     - database
-  #   restart: unless-stopped
-  #   healthcheck:
-  #     test: [ 'CMD', 'ps', 'aux', '|', 'egrep', '"\d+:\d+ php bin/console messenger:consume async failed"' ]
-  #     interval: 10s
-  #     timeout: 3s
-  #     retries: 3
-  #     start_period: 30s
-  #   environment:
-  #     DATABASE_URL: mysql://${MARIADB_USER:-app}:${MARIADB_PASSWORD:-!ChangeMe!}@database:3306/${MARIADB_DATABASE:-app}?serverVersion=mariadb-${MARIADB_VERSION:-10.6}
-  #     MERCURE_URL: ${CADDY_MERCURE_URL:-http://caddy/.well-known/mercure}
-  #     MERCURE_PUBLIC_URL: ${APP_URL:-https://localhost}/.well-known/mercure
-  #     MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
-  #     APP_URL: ${APP_URL:-localhost}
-  #     MAILER_DSN: ${MAILER_DSN:-null://null}
-  #     MESSENGER_TRANSPORT_DSN: ${MESSENGER_TRANSPORT_DSN:-doctrine://default}
+  consumer:
+    build:
+      context: .
+      target: app_php
+    entrypoint: docker-php-entrypoint
+    command: bin/console messenger:consume
+    depends_on:
+      - database
+    restart: unless-stopped
+    #healthcheck:
+      #test: [ 'CMD', 'ps', 'aux', '|', 'egrep', '"\d+:\d+ php bin/console messenger:consume async failed"' ]
+      #interval: 10s
+      #timeout: 3s
+      #retries: 3
+      #start_period: 30s
+    environment:
+      DATABASE_URL: mysql://${MARIADB_USER:-app}:${MARIADB_PASSWORD:-!ChangeMe!}@database:3306/${MARIADB_DATABASE:-app}?serverVersion=mariadb-${MARIADB_VERSION:-10.6}
+      MERCURE_URL: ${CADDY_MERCURE_URL:-http://caddy/.well-known/mercure}
+      MERCURE_PUBLIC_URL: ${APP_URL:-https://localhost}/.well-known/mercure
+      MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
+      APP_URL: ${APP_URL:-localhost}
+      MAILER_DSN: ${MAILER_DSN:-null://null}
+      MESSENGER_TRANSPORT_DSN: ${MESSENGER_TRANSPORT_DSN:-doctrine://default}
 
 volumes:
   php_socket:

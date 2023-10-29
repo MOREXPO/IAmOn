@@ -4,7 +4,7 @@
 	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/particles.css') }}">
 {% endblock %}
 
-{% block title %}Registro de usuarios
+{% block title %}{{ 'Registro de usuarios' | trans }}
 {% endblock %}
 
 {% block body %}
@@ -13,7 +13,7 @@
 		<div class="formulario position-absolute">
 			<form action="{{ path('app_registration') }}" method="post">
 
-				<h1 class="h3 mb-3 fw-normal text-white">Registro</h1>
+				<h1 class="h3 mb-3 fw-normal text-white">{{ 'Registro' | trans }}</h1>
 				{% if error %}
 					<div class="alert alert-danger" role="alert">
 						{{ error }}
@@ -21,23 +21,23 @@
 				{% endif %}
 				<div class="form-floating my-2">
 					<input type="text" class="form-control" id="username" name="username" placeholder="name@example.com">
-					<label for="floatingInput">Usuario</label>
+					<label for="floatingInput">{{ 'Usuario' | trans }}</label>
 				</div>
 				<div class="form-floating my-2">
 					<input type="email" class="form-control" id="email" name="email" placeholder="name@example.com">
 					<label for="floatingInput">Email</label>
 				</div>
 				<div class="form-floating my-2">
-					<input type="password" class="form-control" id="password" name="password" placeholder="Password">
-					<label for="floatingPassword">Contraseña</label>
+					<input type="password" class="form-control" id="password" name="password" placeholder="{{ 'Contraseña' | trans }}">
+					<label for="floatingPassword">{{ 'Contraseña' | trans }}</label>
 				</div>
 				<div class="form-floating my-2">
 					<input type="password" class="form-control" id="passwordRepeat" name="passwordRepeat" placeholder="Password Repeat">
-					<label for="floatingPassword">Repetir contraseña</label>
+					<label for="floatingPassword">{{ 'Repetir contraseña' | trans }}</label>
 				</div>
-				<button class="btn btn-primary w-100 py-2" type="submit">Registrarse</button>
+				<button class="btn btn-primary w-100 py-2" type="submit">{{ 'Registrarse' | trans }}</button>
 				<div class="mt-3">
-					<a href="{{ path('app_login') }}" class="link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Entrar</a>
+					<a href="{{ path('app_login') }}" class="link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">{{ 'Entrar' | trans }}</a>
 				</div>
 			</form>
 		</div>

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Detalle del Switch
+{% block title %}{{'Detalle del Switch'| trans}}
 {% endblock %}
 
 {% block body %}
@@ -9,7 +9,7 @@
 			<div class="container my-5">
 				<div class="row">
 					<div class="col-12">
-						<h2 class="pb-4 border-bottom text-white">Detalle del Switch</h2>
+						<h2 class="pb-4 border-bottom text-white">{{'Detalle del Switch'| trans}}</h2>
 					</div>
 				</div>
 
@@ -33,9 +33,9 @@
 									{% endif %}
 									<label class="{% if not isPublic or switch.owner == app.user %}form-check-label{% endif %}" for="estadoSwitch">
 										{% if switch.state %}
-											<span class="badge bg-success rounded-pill">Encendido</span>
+											<span class="badge bg-success rounded-pill">{{'Encendido'| trans}}</span>
 										{% else %}
-											<span class="badge bg-danger rounded-pill">Apagado</span>
+											<span class="badge bg-danger rounded-pill">{{'Apagado'| trans}}</span>
 										{% endif %}
 									</label>
 								</div>
@@ -46,11 +46,11 @@
 										</strong>
 										<script>
 											// Obtiene la fecha y hora almacenada en PHP y conviértela en un objeto DateTime de JavaScript
-var clickDate = luxon.DateTime.fromISO("{{ switch.clickDate|date('c') }}"); // Asegúrate de obtener la fecha correcta de tu contexto de Twig
+var clickDateStart = luxon.DateTime.fromISO("{{ switch.clickDateStart|date('c') }}"); // Asegúrate de obtener la fecha correcta de tu contexto de Twig
 
 function updateMinutesCounter() {
 var currentTime = luxon.DateTime.local();
-var elapsedTime = Math.floor(currentTime.diff(clickDate, 'seconds').seconds);
+var elapsedTime = Math.floor(currentTime.diff(clickDateStart, 'seconds').seconds);
 var minutes = Math.floor(elapsedTime / 60);
 var seconds = elapsedTime % 60;
 
@@ -58,7 +58,7 @@ var minutesText = String(minutes).padStart(2, '0');
 var secondsText = String(seconds).padStart(2, '0');
 
 var minutosEncendido = document.getElementById("minutosEncendido");
-minutosEncendido.textContent = "Tiempo encendido: " + minutesText + ":" + secondsText;
+minutosEncendido.textContent = "{{'Tiempo encendido'| trans}}: " + minutesText + ":" + secondsText;
 }
 
 // Llama a la función inicialmente para mostrar el tiempo actual
@@ -73,16 +73,16 @@ setInterval(updateMinutesCounter, 1000);
 										</strong>
 										<script>
 											// Obtiene la fecha y hora almacenada en PHP y conviértela en un objeto DateTime de JavaScript
-var clickDate = luxon.DateTime.fromISO("{{ switch.clickDate|date('c') }}"); // Asegúrate de obtener la fecha correcta de tu contexto de Twig
+var clickDateEnd = luxon.DateTime.fromISO("{{ switch.clickDateEnd|date('c') }}"); // Asegúrate de obtener la fecha correcta de tu contexto de Twig
 
 var fechaUltimoEncendido = document.getElementById("fechaUltimoEncendido");
-var formattedDate = clickDate.toLocaleString(luxon.DateTime.DATETIME_FULL);
-fechaUltimoEncendido.textContent = "Fecha Último Encendido: " + formattedDate;
+var formattedDate = clickDateEnd.toLocaleString(luxon.DateTime.DATETIME_FULL);
+fechaUltimoEncendido.textContent = "{{'Fecha Último Encendido'| trans}}: " + formattedDate;
 										</script>
 									{% endif %}
 								</div>
 								<div class="mb-3">
-									<strong>Propietario:</strong>
+									<strong>{{'Propietario'| trans}}:</strong>
 									{{switch.owner.username}}
 								</div>
 							</div>
@@ -93,9 +93,9 @@ fechaUltimoEncendido.textContent = "Fecha Último Encendido: " + formattedDate;
 
 											<input type="hidden" name="switch_uuid" value="{{ app.request.attributes.get('uuid') }}">
 											{% if is_suscrito %}
-												<button type="submit" class="btn btn-danger">Dejar de seguir</button>
+												<button type="submit" class="btn btn-danger">{{'Dejar de seguir'| trans}}</button>
 											{% else %}
-												<button type="submit" class="btn btn-primary">Seguir</button>
+												<button type="submit" class="btn btn-primary">{{'Seguir'| trans}}</button>
 											{% endif %}
 
 										</form>
@@ -117,7 +117,7 @@ fechaUltimoEncendido.textContent = "Fecha Último Encendido: " + formattedDate;
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="switchModalLabel">Configurar Switch</h5>
+						<h5 class="modal-title" id="switchModalLabel">{{'Configurar interruptor'| trans}}</h5>
 						<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -125,14 +125,14 @@ fechaUltimoEncendido.textContent = "Fecha Último Encendido: " + formattedDate;
 					<div class="modal-body">
 						<form id="switchForm{{ switch.id }}">
 							<div class="form-group">
-								<label for="onTime">Tiempo de Encendido (minutos):</label>
+								<label for="onTime">{{'Tiempo de Encendido (minutos)'| trans}}:</label>
 								<input type="number" class="form-control" id="onTime{{ switch.id }}" name="onTime" min="1" max="120" value="60">
 							</div>
 						</form>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-						<button type="button" class="btn btn-primary" onclick="encenderSwitch({{ switch.id }})">Encender</button>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{'Cerrar'| trans}}</button>
+						<button type="button" class="btn btn-primary" onclick="encenderSwitch({{ switch.id }})">{{'Encender'| trans}}</button>
 					</div>
 				</div>
 			</div>
