@@ -98,7 +98,7 @@ class SwitchController extends AbstractController
             $switch->setClickDateStart(new DateTime());
             $switch->setState(true);
 
-            /*foreach ($switch->getFollowers() as $follower) {
+            foreach ($switch->getFollowers() as $follower) {
                 $user = $follower->getUser();
                 if (!empty($user->getEmail())) {
                     $email = (new Email())
@@ -114,7 +114,7 @@ class SwitchController extends AbstractController
 
                     $mailer->send($email);
                 }
-            }*/
+            }
         } else {
             $switch->setClickDateEnd(new DateTime());
             $switch->setState(false);
